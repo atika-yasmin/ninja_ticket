@@ -54,8 +54,8 @@
                     <input id="first-class-ticket-count" class="inp-style inp-width" type="number" name="" value="0">
                 </div>
                 <div class="plus-minus-btn">
-                    <button onclick="handleFlightCost(true)" class="btn">+</button>
-                    <button onclick="handleFlightCost(false)"  class="btn">-</button>
+                    <button onclick="handleFlightCost('first-class-ticket', true)" class="btn">+</button>
+                    <button onclick="handleFlightCost('first-class-ticket', false)"  class="btn">-</button>
                 </div>
             </div>
             
@@ -65,8 +65,8 @@
                     <input id="economy-ticket-count" class="inp-style inp-width" type="number" name="" value="0">
                 </div>
                 <div class="plus-minus-btn">
-                    <button onclick="handleEconomyFlightCost(true)" class="btn">+</button>
-                    <button onclick="handleEconomyFlightCost(false)" class="btn">-</button>
+                    <button onclick="handleFlightCost('economy-ticket', true)" class="btn">+</button>
+                    <button onclick="handleFlightCost('economy-ticket', false)" class="btn">-</button>
                 </div>
             </div>
             <div class="calculations">
@@ -84,7 +84,7 @@
                         <p>Charge 10% VAT</p>
                     </div>
                     <div class="right">
-                        <p id="tax">$50</p>
+                        <p id="vat">$50</p>
                     </div>
                 </div>
                 <hr>
@@ -107,30 +107,47 @@
     </section>
 
     <script>
-        function handleFlightCost(isIncrease){
-            const firstClassTicketInput = document.getElementById('first-class-ticket-count');
-            const firstClassTicketCount = parseInt(firstClassTicketInput.value);
-            let firstClassTicketNewCount = firstClassTicketCount;
+        function handleFlightCost(flightTicket, isIncrease){
+            const flightTicketCount = getTicketInput(flightTicket);
+            let flightTicketNewCount = flightTicketCount;
             if(isIncrease == true){
-                firstClassTicketNewCount = firstClassTicketCount + 1;
+                flightTicketNewCount = flightTicketCount + 1;
             }
-            if(isIncrease == false && firstClassTicketCount > 0){
-                firstClassTicketNewCount = firstClassTicketCount - 1;
+            if(isIncrease == false && flightTicketCount > 0){
+                flightTicketNewCount = flightTicketCount - 1;
             }
-            firstClassTicketInput.value = firstClassTicketNewCount;
+            document.getElementById(flightTicket +'-count').value = flightTicketNewCount;
+            calculateTotalCost();    
         }
-        function handleEconomyFlightCost(isIncrease){
-            const economyTicketInput = document.getElementById('economy-ticket-count');
-            const economyTicketCount = parseInt(economyTicketInput.value);
-            let economyTicketNewCount = economyTicketCount;
-            if(isIncrease == true){
-                economyTicketNewCount = economyTicketCount + 1;
-            }
-            if(isIncrease == false && economyTicketCount > 0){
-                economyTicketNewCount = economyTicketCount - 1;
-            }
-            economyTicketInput.value = economyTicketNewCount;
+
+        function calculateTotalCost(){
+            const firstClassTicketCount = getTicketInput('first-class-ticket');
+            const economyTicketCount = getTicketInput('economy-ticket');
+           subTotal = firstClassTicketCount * 150 + economyTicketCount * 100;
+           document.getElementById('sub-total').innerText ='$' + subTotal;
+           const vat = subTotal/10;
+           document.getElementById('vat').innerText ='$' + vat;
+           const grandTotal = subTotal + vat;
+           document.getElementById('grand-total').innerText ='$' + grandTotal;
         }
+
+        function getTicketInput(flightTicket){
+        const flightTicketInput = document.getElementById(flightTicket + '-count');
+           const flightTicketCount = parseInt(flightTicketInput.value);
+           return flightTicketCount;
+        }
+        // function handleEconomyFlightCost(isIncrease){
+        //     const economyTicketInput = document.getElementById('economy-ticket-count');
+        //     const economyTicketCount = parseInt(economyTicketInput.value);
+        //     let economyTicketNewCount = economyTicketCount;
+        //     if(isIncrease == true){
+        //         economyTicketNewCount = economyTicketCount + 1;
+        //     }
+        //     if(isIncrease == false && economyTicketCount > 0){
+        //         economyTicketNewCount = economyTicketCount - 1;
+        //     }
+        //     economyTicketInput.value = economyTicketNewCount;
+        // }
 
          //  document.getElementById('first-class-ticket-increase').addEventListener("click",function(){
         //  handleFlightCost(true);
@@ -154,6 +171,12 @@
         //     const economyTicketInput = document.getElementById('economy-ticket-count');
         //     const economyTicketCount = parseInt(economyTicketInput.value);
         //     const economyTicketNewCount = economyTicketCount + 1;
+        //     economyTicketInput.value = economyTicketNewCount;
+        // })
+         // document.getElementById('economy-ticket-decrease').addEventListener("click",function(){
+        //     const economyTicketInput = document.getElementById('economy-ticket-count');
+        //     const economyTicketCount = parseInt(economyTicketInput.value);
+        //     const economyTicketNewCount = economyTicketCount - 1;
         //     economyTicketInput.value = economyTicketNewCount;
         // })
     </script>
